@@ -4,6 +4,14 @@
 ---
 #### 整体架构
 
+```java
+    |- pers.hu.oneradio
+            |- Activities   //活动或UI包
+            |- Net          //网络相关包
+            |- Utils        //工具类包
+            |- Controllers  //控制器包
+       MainActivity.java    //入口
+```
 
 - 基本功能
   - 收听网络音频流
@@ -28,5 +36,6 @@
 =======
 # OneRadio
 One Radio ,One Feel, Only One.   One app full of radio and love.
->>>>>>> origin/master
-ok>>>>>>>>>>>>>>>
+\>>>>>>> origin/master
+- liuliutest  ok>>>>>>>>>>>>>>>
+
