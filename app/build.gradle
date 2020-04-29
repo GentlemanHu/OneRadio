@@ -27,4 +27,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    // https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client
+    api group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.1'
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    api group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+    // https://mvnrepository.com/artifact/com.alibaba/fastjson
+    api group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
+
+
 }
