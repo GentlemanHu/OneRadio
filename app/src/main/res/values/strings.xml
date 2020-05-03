@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">OneRadio</string>
+    <string name="logoDescription">logo</string>
+    <string name="radio_button">One Radio</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="command_path_data">M18,3a3,3 0,0 0,-3 3v12a3,3 0,0 0,3 3,3 3,0 0,0 3,-3 3,3 0,0 0,-3 -3H6a3,3 0,0 0,-3 3,3 3,0 0,0 3,3 3,3 0,0 0,3 -3V6a3,3 0,0 0,-3 -3,3 3,0 0,0 -3,3 3,3 0,0 0,3 3h12a3,3 0,0 0,3 -3,3 3,0 0,0 -3,-3z</string>
+
+    <string name="title_activity_welcome">Welcome</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

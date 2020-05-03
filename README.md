@@ -6,10 +6,10 @@
 
 <pre><code class="java">
     |- pers.hu.oneradio
-            |- Activities   //活动或UI包
-            |- Net          //网络处理相关包
-            |- Utils        //工具类包
-            <s>|- Controllers  //控制器包(暂不需要)</s>
+            |- activities   //活动或UI包
+            |- net          //网络处理相关包
+            |- utils        //工具类包
+            <s>|- controllers  //控制器包(暂不需要)</s>
     |- MainActivity.java    //入口
 
 
@@ -26,8 +26,9 @@
 ---
 
 - [ ] 基本功能
-  - [ ] 收听网络音频流
-    - [ ] 切换音频流
+  - [ ] 收听网络音频流（电台）
+    - [ ] 切换音频流（电台）
+    - [ ] 随机电台
     - [ ] 收听历史记录
     - [ ] 收听类型选择
     - [ ] 电台配图

@@ -4,8 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
+    android:background="@drawable/bg"
+    tools:context=".activity.MainActivity"
     tools:showIn="@layout/activity_main">
+    <Button
+        android:id="@+id/angry_btn"
 
+        android:layout_width="170dp"
+        android:layout_height="81dp"
+        android:layout_marginStart="120dp"
+
+
+        android:layout_marginEnd="121dp"
+
+        android:background="@drawable/buttonshape"
+        android:shadowColor="#ABBD88"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5"
+        android:text="@string/radio_button"
+        android:textAllCaps="false"
+        android:textColor="#4ABDFF"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.776" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:contentDescription="@string/logoDescription"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.14"
+        android:src="@drawable/onelogo" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+

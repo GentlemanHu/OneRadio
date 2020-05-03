@@ -25,9 +25,6 @@ public class SongData {
         this.code = code;
     }
 
-    private long id;
-    private String url;
-    private int code;
 
     public String getPicUrl() {
         return picUrl;
@@ -37,5 +34,8 @@ public class SongData {
         this.picUrl = picUrl;
     }
 
+    private long id;
+    private String url;
+    private int code;
     private String picUrl;
 }
