@@ -59,4 +59,10 @@
 One Radio ,One Feel, Only One.   One app full of radio and love.
 \>>>>>>> origin/master
 - liuliutest  ok>>>>>>>>>>>>>>>
+- 使用了 MiniMusicView 控件来播放音乐
+- git status    查看本地库状态
+- git add .
+- git commit -m "改动注释"
+- git push -u origin 上传
+- git pull origin
 

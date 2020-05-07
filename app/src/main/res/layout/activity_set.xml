@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--设置按钮，与主页面左上角按钮相连接,可以设置页面切换或者按下设置按钮触发
+<include layout="@layout/set" />-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".set"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:id="@+id/ll_set"
+        tools:ignore="UselessParent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/bt_set"
+            android:onClick="sset"
+            android:padding="5dp"
+            android:background="@android:drawable/ic_media_play"/>
+
+    </LinearLayout>
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/set"
+        android:text="设置"
+        android:onClick="install"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/about"
+        android:text="关于"
+        android:onClick="about"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/contact"
+        android:text="联系"
+        android:onClick="content"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"/>
+
+    <include layout="@layout/activity_main_page" />
+
+
+
+</LinearLayout>
