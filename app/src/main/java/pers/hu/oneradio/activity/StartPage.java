@@ -1,15 +1,14 @@
 package pers.hu.oneradio.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
-import pers.hu.oneradio.R;
 
-public class StartPage extends Activity {
+
+public class StartPage extends PerfectActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +17,10 @@ public class StartPage extends Activity {
             @Override
             public void run() {
                 try {
-                    sleep(1500);//使程序休眠一秒
+                    sleep(3200);//使程序休眠一秒
                     Intent it = new Intent(getApplicationContext(),MainActivity.class);
                     startActivity(it);
-                    finish();//关闭当前活动
-                    Transition.runFadeInAnimation(findViewById(R.id.angry_btn));
+                    finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -30,4 +28,5 @@ public class StartPage extends Activity {
         };
         myThread.start();//启动线程
     }
+
 }

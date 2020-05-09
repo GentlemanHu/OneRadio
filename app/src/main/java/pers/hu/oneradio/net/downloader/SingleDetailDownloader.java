@@ -4,10 +4,8 @@ package pers.hu.oneradio.net.downloader;
 
 import org.jsoup.Jsoup;
 
-import java.net.URL;
-
 import pers.hu.oneradio.net.SmartUrlGetter;
-import pers.hu.oneradio.utils.other.DjCategory;
+import pers.hu.oneradio.utils.othertest.DjCategory;
 
 public class SingleDetailDownloader extends BaseDetailDownloader {
     //TODO:未使用异步处理
@@ -17,7 +15,7 @@ public class SingleDetailDownloader extends BaseDetailDownloader {
         String content = "";
         //send request and get data
         try {
-           content =  Jsoup.connect(url).ignoreContentType(true).execute().body();
+           content =  Jsoup.connect(url).ignoreContentType(true).maxBodySize(0).timeout(20000).execute().body();
            //System.out.println(content);
         } catch (Exception e) {
             e.printStackTrace();

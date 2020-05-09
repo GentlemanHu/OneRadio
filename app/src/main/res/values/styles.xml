@@ -31,6 +31,6 @@
 
     <style name="SplashActivityTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/bg</item>
+        <item name="android:windowBackground">@drawable/welcome2</item>
     </style>
 </resources>

@@ -2,12 +2,14 @@ package pers.hu.oneradio;
 
 import org.junit.Test;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import pers.hu.oneradio.net.SmartUrlGetter;
 import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
-import pers.hu.oneradio.net.model.SongData;
+import pers.hu.oneradio.net.model.DjDetail;
+import pers.hu.oneradio.net.model.Song;
+import pers.hu.oneradio.tool.music.MusicHelper;
 import pers.hu.oneradio.utils.parser.SingleSongParser;
 
 import static org.junit.Assert.*;
@@ -24,22 +26,18 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testResponse(){
+    public void testResponse() {
         SingleDetailDownloader downloader = new SingleDetailDownloader();
         SingleSongParser parser = new SingleSongParser();
-        try {
-            List list=parser.parserSong(downloader.getData(SmartUrlGetter.getHotDjRaw()));
-            Iterator it = list.iterator();
-            while (it.hasNext()){
-                SongData songData = (SongData)it.next();
-                System.out.println(
-                songData.getId()+"，"+songData.getPicUrl()
-                );
-            }
-            //parser.parserSong(downloader.getData(SmartUrlGetter.getHotDjRaw()));
-            //System.out.println(downloader.getDjByCateId(3366));
-        } catch (Exception e) {
-            e.printStackTrace();
+       List<Song> songs= parser.toSongData(downloader.getDjDetailWithProgramsByRid(793094397));
+        for (Song song:songs
+             ) {
+            System.out.println(song.getUrl());
         }
+    }
+
+    @Test
+    public void testRandom(){
+        System.out.println(MusicHelper.getRandomUrl());
     }
 }

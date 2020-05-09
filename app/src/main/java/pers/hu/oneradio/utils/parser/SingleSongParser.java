@@ -1,13 +1,11 @@
 package pers.hu.oneradio.utils.parser;
 
-import android.util.Pair;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.JSONSerializable;
-import com.alibaba.fastjson.serializer.JSONSerializableSerializer;
-import com.alibaba.fastjson.serializer.JSONSerializer;
+import com.alibaba.fastjson.JSONPath;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,79 +13,104 @@ import java.util.List;
 
 import pers.hu.oneradio.net.SmartUrlGetter;
 import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
+import pers.hu.oneradio.net.model.DjDetail;
 import pers.hu.oneradio.net.model.SingleObjectModel;
-import pers.hu.oneradio.net.model.SongData;
+import pers.hu.oneradio.net.model.Song;
 
 public class SingleSongParser {
     private static SingleDetailDownloader downloader = new SingleDetailDownloader();
-    private List<SongData> songDatas;
-    private SongData songData;
+    private List<Song> songs;
+    private Song song;
 
+
+    public List<Song> toSongData(String programStr) {
+        JSONObject object = JSON.parseObject(programStr);
+        List<String> name = (List<String>) JSONPath.eval(object, "$programs[0:].mainSong.name");
+        List<Integer> ids = (List<Integer>) JSONPath.eval(object, "$programs[0:].mainSong.id");
+        songs = new ArrayList<Song>();
+        Log.println(Log.ERROR,"Null",songs+","+ids.get(0));
+        Iterator it = ids.iterator();
+        while (it.hasNext()) {
+            Integer id = (Integer) it.next();
+            song = new Song();
+            song.setId(id);
+            song.setUrl(parseSongUrl(id));
+            songs.add(song);
+        }
+        return songs;
+    }
+
+    public String parseSongUrl(long id) {
+        String str = downloader.getSongUrlDataById(id);
+        JSONObject object = JSON.parseObject(str);
+        return (String) JSONPath.eval(object, "$data[0].url");
+    }
+
+    public List getSongData(String str) {
+        List<DjDetail> djDetails = new ArrayList<DjDetail>();
+        JSONObject obj = JSON.parseObject(str);
+        JSONArray array = obj.getJSONArray("djRadios");
+        for (Object o : array
+        ) {
+            JSONObject oj = (JSONObject) o;
+            DjDetail dj = JSON.parseObject(oj.toJSONString(), DjDetail.class);
+            djDetails.add(dj);
+        }
+        List<Integer> list = (List<Integer>) JSONPath.eval(obj, "$..id");
+        for (Integer in : list
+        ) {
+            System.out.println(in);
+        }
+        return djDetails;
+    }
+
+
+    @Deprecated
     //暂且使用string传递，用流或者其他类型可能更安全
     public SingleObjectModel parseDetail(String jsonstr) {
         SingleObjectModel singleObjectModel = (SingleObjectModel) JSON.parseObject(jsonstr, SingleObjectModel.class);
         //一般来说单曲数组只有一个，获取第一个就行。但有可能nullpointer。
-        songData = singleObjectModel.getData()[0];
+        song = singleObjectModel.getData()[0];
         return singleObjectModel;
     }
 
-    public List<SongData> parserSong(String str) {
-        songDatas = new ArrayList<>();
+    @Deprecated
+    public List<Song> parserSong(String str) {
+        songs = new ArrayList<>();
         JSONObject obj = JSON.parseObject(str);
         JSONArray array = obj.getJSONArray("djRadios");
         Iterator it = array.iterator();
         //获取djRadio节目的detailID，并暂时存储
         while (it.hasNext()) {
-            songData = new SongData();
+            song = new Song();
             JSONObject object = (JSONObject) it.next();
-            long detailID = Integer.valueOf((Integer) object.get("id")).longValue();
+            Integer detailID = (Integer) object.get("id");
             System.out.println(detailID);
             String[] result = getRealURL(detailID);
-
-            songData.setId(detailID);
-//            songData.setPicUrl(result[1]);
-//            songData.setUrl(result[0]);
-
-            songDatas.add(songData);
+            song.setId(detailID);
+            songs.add(song);
         }
-        //通过detailID获取真实songID，在通过songID，获取真实url
-
-        return songDatas;
+        return songs;
     }
 
-    public SongData getSong() {
-        return songData;
+    public Song getSong() {
+        return song;
     }
 
+    @Deprecated
     //TODO:优化缩减！写的比较繁琐冗余
     public String[] getRealURL(long detailID) {
         String url = "";
         String picUrl = "";
 
-
         //获取真实ID
-        String raw = downloader.getData(SmartUrlGetter.getSongDetailById(detailID));
+        String raw = downloader.getData(SmartUrlGetter.getDjDetailByRid(detailID));
+        System.out.println(raw);
         JSONObject object1 = JSON.parseObject(raw);
-        JSONArray array = object1.getJSONArray("songs");
-        System.out.println(array);
-        JSONObject object = (JSONObject) array.get(0);
-        JSONObject object2 = (JSONObject) object.get("al");
+        JSONObject djradio = (JSONObject) object1.get("djRadio");
+        JSONObject lastProgramId = (JSONObject) djradio.get("lastProgramId");
 
-        picUrl=(String) object2.get("picUrl");
-
-        System.out.println(picUrl);
-        //通过ID获取URL
-        String raw2 = downloader.getSongDetailById(Integer.valueOf((int)object2.get("id")).longValue());
-
-        JSONObject urlObj = JSON.parseObject(raw2);
-        JSONArray urlArray = urlObj.getJSONArray("data");
-        JSONObject urlPair = (JSONObject) urlArray.get(0);
-
-        url = (String) urlPair.get("url");
-
-        System.out.println(url);
-
-        String[] result = new String[]{url,picUrl};
+        String[] result = new String[]{url, picUrl};
         return result;
     }
 }

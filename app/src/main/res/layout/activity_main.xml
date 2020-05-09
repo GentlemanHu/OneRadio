@@ -7,16 +7,31 @@
     android:background="#000000"
     tools:context=".activity.MainActivity">
 
-
     <include layout="@layout/content_main" />
+
     <com.richpath.RichPathView
         android:id="@+id/command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:padding="10dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="400dp"
+        android:padding="1dp"
         android:visibility="visible"
         app:vector="@drawable/command"
         tools:visibility="visible" />
+    <TextView
+        android:id="@+id/songName"
+        android:layout_width="180dp"
+        android:layout_height="93dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="-150dp"
+        android:autoSizeTextType="uniform"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif-medium"
+        android:textAllCaps="true"
+        android:textColor="@color/default_bmb_shareLine2Color"
+        android:textDirection="inherit"
+        android:textIsSelectable="false"
+        android:textStyle="bold" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

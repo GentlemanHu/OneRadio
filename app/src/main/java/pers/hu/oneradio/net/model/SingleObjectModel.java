@@ -1,7 +1,7 @@
 package pers.hu.oneradio.net.model;
 
+@Deprecated
 public class SingleObjectModel {
-
 
     public int getCode() {
         return code;
@@ -11,15 +11,15 @@ public class SingleObjectModel {
         this.code = code;
     }
 
-    public SongData[] getData(){
+    public Song[] getData(){
         return data;
     }
 
-    public void setData(SongData[] data) {
+    public void setData(Song[] data) {
         this.data = data;
     }
 
-    private SongData[] data;
+    private Song[] data;
     private int code;
 
 }

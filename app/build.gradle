@@ -59,4 +59,11 @@ dependencies {
     implementation 'com.github.tarek360.RichPath:animator:0.1.1'
     //menu pop bom!
     implementation 'com.nightonke:boommenu:2.1.1'
+    //slide image CardSlider   https://github.com/Ramotion/cardslider-android
+    implementation 'com.ramotion.cardslider:card-slider:0.3.1'
+    // image loader
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    // blur bg
+    implementation 'jp.wasabeef:blurry:3.0.0'
+
 }

@@ -1,6 +1,6 @@
 package pers.hu.oneradio.net;
 
-import pers.hu.oneradio.utils.other.DjCategory;
+import pers.hu.oneradio.utils.othertest.DjCategory;
 
 public class SmartUrlGetter {
     final static String site = "http://www.crushing.xyz:3000";
@@ -22,7 +22,7 @@ public class SmartUrlGetter {
     }
 
     public static String getDjDetailWithProgramsByRid(long id){
-         return site+"/dj/programs?rid="+id;
+         return site+"/dj/program?rid="+id+"&limit=20";
     }
     public static String getProgramDetailById(long id){
          return site+"/dj/program/detail?id="+id;
