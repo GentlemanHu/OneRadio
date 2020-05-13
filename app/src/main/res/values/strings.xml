@@ -7,5 +7,6 @@
 
     <string name="title_activity_welcome">Welcome</string>
     <string name="dummy_button">Dummy Button</string>
+    <string name="oneradio">同一个世界 同一个电台\n  --OneRadio</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

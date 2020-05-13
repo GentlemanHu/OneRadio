@@ -1,6 +1,10 @@
 package pers.hu.oneradio;
 
 import android.app.Application;
+import android.graphics.Color;
+import android.os.Build;
+import android.view.View;
+import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.lzx.starrysky.StarrySky;
@@ -13,7 +17,11 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class OneRadioApplication extends Application {
     @Override
@@ -43,7 +51,6 @@ public class OneRadioApplication extends Application {
                 .discCacheFileCount(100) // 缓冲文件数目
                 .discCacheFileNameGenerator(new HashCodeFileNameGenerator()) // default
                 .imageDownloader(new BaseImageDownloader(this)) // default
-
                 .defaultDisplayImageOptions(fadeOption()) // default   DisplayImageOptions.createSimple()
                 .writeDebugLogs().build();
 
@@ -56,7 +63,7 @@ public class OneRadioApplication extends Application {
 
     private DisplayImageOptions fadeOption() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .displayer(new FadeInBitmapDisplayer(1000)).build();
+                .displayer(new FadeInBitmapDisplayer(2500)).build();
         return options;
     }
 

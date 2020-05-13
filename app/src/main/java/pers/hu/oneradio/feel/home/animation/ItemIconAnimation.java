@@ -1,15 +1,10 @@
 package pers.hu.oneradio.feel.home.animation;
 
 import android.view.animation.LinearInterpolator;
-import android.widget.TextView;
 
-import com.lzx.starrysky.StarrySky;
-import com.lzx.starrysky.provider.SongInfo;
 import com.richpath.RichPath;
 import com.richpath.RichPathView;
 import com.richpathanimator.RichPathAnimator;
-
-import pers.hu.oneradio.tool.music.MusicHelper;
 
 public class ItemIconAnimation {
     private RichPathAnimator animator, animator2;

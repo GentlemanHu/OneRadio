@@ -2,14 +2,13 @@ package pers.hu.oneradio;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import pers.hu.oneradio.net.SmartUrlGetter;
+import pers.hu.oneradio.deal.hand.async.DjSingleTask;
 import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
 import pers.hu.oneradio.net.model.DjDetail;
 import pers.hu.oneradio.net.model.Song;
-import pers.hu.oneradio.tool.music.MusicHelper;
+import pers.hu.oneradio.utils.parser.DjParser;
 import pers.hu.oneradio.utils.parser.SingleSongParser;
 
 import static org.junit.Assert.*;
@@ -27,17 +26,23 @@ public class ExampleUnitTest {
 
     @Test
     public void testResponse() {
-        SingleDetailDownloader downloader = new SingleDetailDownloader();
-        SingleSongParser parser = new SingleSongParser();
-       List<Song> songs= parser.toSongData(downloader.getDjDetailWithProgramsByRid(793094397));
-        for (Song song:songs
-             ) {
-            System.out.println(song.getUrl());
-        }
     }
 
     @Test
     public void testRandom(){
-        System.out.println(MusicHelper.getRandomUrl());
+
+    }
+
+    @Test
+    public void testDj(){
+        DjParser parser = new DjParser();
+        SingleDetailDownloader detailDownloader = new SingleDetailDownloader();
+
+       parser.parseDjs(detailDownloader.getDjHot());
+        List<DjDetail> details = parser.getDjs();
+        for (DjDetail dj:details
+             ) {
+            System.out.println(dj.getPicUrl());
+        }
     }
 }

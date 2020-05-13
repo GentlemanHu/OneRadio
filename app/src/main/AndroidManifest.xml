@@ -18,12 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
         <service
-            android:name=".tool.music.MusicService"
+            android:name=".deal.music.MusicService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".activity.StartPage"
+            android:name=".activity.start.StartPage"
             android:theme="@style/SplashActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,8 +31,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.start.Forward"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activity.Home" />
+        <activity android:name=".activity.home.Home" />
     </application>
 </manifest>

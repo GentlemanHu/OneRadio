@@ -2,6 +2,18 @@ package pers.hu.oneradio.net.model;
 
 public class DjDetail {
     private Integer id;
+    private String rcmdtext;
+    private String category;
+    private String picUrl;
+    private Program[] programs;
+
+    public Program[] getPrograms() {
+        return programs;
+    }
+
+    public void setPrograms(Program[] programs) {
+        this.programs = programs;
+    }
 
     public Integer getId() {
         return id;
@@ -34,10 +46,5 @@ public class DjDetail {
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
     }
-
-    private String rcmdtext;
-    private String category;
-    private String picUrl;
-
 
 }

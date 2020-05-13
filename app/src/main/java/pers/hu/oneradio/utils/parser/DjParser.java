@@ -13,7 +13,7 @@ public class DjParser {
     private List<DjDetail> djDetails = new ArrayList<DjDetail>();
 
     //TODO:异常处理等，优化
-    public void setDjs(String djraws){
+    public void parseDjs(String djraws){
         JSONObject obj = JSON.parseObject(djraws);
         JSONArray array = obj.getJSONArray("djRadios");
         for (Object o:array

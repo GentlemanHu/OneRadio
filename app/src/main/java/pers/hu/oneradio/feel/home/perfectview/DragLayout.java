@@ -84,11 +84,13 @@ public class DragLayout extends FrameLayout {
                 if (state == STATE_CLOSE) {
                     // 点击时为初始状态，需要展开
                     if (mDragHelper.smoothSlideViewTo(topView, originX, dragTopDest)) {
+                        System.out.println("topviewclicked");
                         ViewCompat.postInvalidateOnAnimation(DragLayout.this);
                     }
                 } else {
                     // 点击时为展开状态，直接进入详情页
                     gotoDetailActivity();
+                    System.out.println("detailclicked->>>>>");
                 }
             }
         });

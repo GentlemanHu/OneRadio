@@ -9,10 +9,11 @@ import android.view.animation.AnimationUtils;
 
 
 import pers.hu.oneradio.R;
+import pers.hu.oneradio.activity.home.Home;
 
 public class Transition {
-    static final Animation in = new AlphaAnimation(0.0f, 3.0f);
-    static final Animation out = new AlphaAnimation(3.0f, 0.0f);
+    static final Animation in = new AlphaAnimation(0.0f, 5.0f);
+    static final Animation out = new AlphaAnimation(5.0f, 0.0f);
     static final AnimationSet as = new AnimationSet(true);
 
 
@@ -48,7 +49,7 @@ public class Transition {
 
     public static AnimationSet imageFade(){
         as.addAnimation(out);
-        in.setStartOffset(1000);
+        in.setStartOffset(3000);
         as.addAnimation(in);
         return as;
     }

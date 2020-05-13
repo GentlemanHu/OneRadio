@@ -8,8 +8,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -26,6 +30,9 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.richpath.RichPathView;
 
+import java.io.Serializable;
+
+import jp.wasabeef.blurry.Blurry;
 import pers.hu.oneradio.R;
 import pers.hu.oneradio.feel.home.animation.ItemIconAnimation;
 import pers.hu.oneradio.feel.home.animation.Transition;
@@ -33,15 +40,18 @@ import pers.hu.oneradio.feel.home.animation.Transition;
 /**
  * Created by xmuSistone on 2016/9/18.
  */
-public class CommonFragment extends Fragment {
+public class CommonFragment extends Fragment implements Serializable {
     private ImageView imageView;
-    private View address1, address2, address3, address4, address5;
+    private View address1, address2, address4, address5;
+    private TextView address3;
     private RatingBar ratingBar;
     private View head1, head2, head3, head4;
     private String imageUrl;
     private RichPathView richPathView;
     private ItemIconAnimation animation;
+    private ImageLoader imageLoader;
     private View rootView;
+    private ImageView homebg;
 
     @Nullable
     @Override
@@ -49,13 +59,13 @@ public class CommonFragment extends Fragment {
         super.onCreate(savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_common, null);
         DragLayout dragLayout = rootView.findViewById(R.id.drag_layout);
+        homebg = rootView.findViewById(R.id.homebg);
         imageView = (ImageView) dragLayout.findViewById(R.id.image);
         richPathView = dragLayout.findViewById(R.id.loading);
         animation = new ItemIconAnimation(richPathView);
         animation.animateCommand();
 
         ImageLoader.getInstance().displayImage(imageUrl, imageView);
-
         address1 = dragLayout.findViewById(R.id.address1);
         address2 = dragLayout.findViewById(R.id.address2);
         address3 = dragLayout.findViewById(R.id.address3);
@@ -76,7 +86,12 @@ public class CommonFragment extends Fragment {
         this.imageUrl = imageUrl;
     }
 
-    public String getUrl() {
-        return imageUrl;
+    public void updateImage(Bitmap bitmap) {
+        imageView.setImageBitmap(bitmap);
     }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
 }

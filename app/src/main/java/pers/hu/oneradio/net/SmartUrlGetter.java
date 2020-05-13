@@ -21,16 +21,23 @@ public class SmartUrlGetter {
         return site + "/dj/detail?rid=" + id;
     }
 
-    public static String getDjDetailWithProgramsByRid(long id){
-         return site+"/dj/program?rid="+id+"&limit=20";
+    public static String getDjDetailWithProgramsByRid(long id,int offset) {
+        return site + "/dj/program?rid=" + id + "&limit=10"+"&offset="+offset;
     }
-    public static String getProgramDetailById(long id){
-         return site+"/dj/program/detail?id="+id;
+
+    public static String getProgramDetailById(long id) {
+        return site + "/dj/program/detail?id=" + id;
     }
+
     public static String getRecommendDjRaw() {
         return site + "/dj/recommend";
     }
-    public static String getDjByCateId(@DjCategory int category){
-         return site+"/dj/radio/hot?cateId="+category;
+
+    public static String getDjByCateId(@DjCategory int category) {
+        return site + "/dj/radio/hot?cateId=" + category;
+    }
+
+    public static String getProgramTopList() {
+        return site + "/dj/program/toplist";
     }
 }
