@@ -9,6 +9,11 @@ import android.view.WindowManager;
 import com.bumptech.glide.Glide;
 import com.lzx.starrysky.StarrySky;
 import com.lzx.starrysky.StarrySkyConfig;
+import com.lzx.starrysky.control.OnPlayerEventListener;
+import com.lzx.starrysky.notification.CustomNotification;
+import com.lzx.starrysky.notification.NotificationConfig;
+import com.lzx.starrysky.notification.StarrySkyNotificationManager;
+import com.lzx.starrysky.provider.SongInfo;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -24,14 +29,26 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class OneRadioApplication extends Application {
+
     @Override
     public void onCreate() {
         super.onCreate();
-        StarrySky.Companion.init(this);
+        initPlayer();
         initImageLoader();
     }
 
 
+    private void initPlayer(){
+        NotificationConfig notificationConfig = new NotificationConfig();
+        notificationConfig.setTargetClass("pers.hu.oneradio.activity.home.Home");
+
+        StarrySkyConfig config = new StarrySkyConfig().newBuilder()
+                .isOpenNotification(true)
+                .setNotificationFactory(StarrySkyNotificationManager.Companion.getSYSTEM_NOTIFICATION_FACTORY())
+                .setNotificationConfig(notificationConfig)
+                .build();
+        StarrySky.Companion.init(this,config);
+    }
     @SuppressWarnings("deprecation")
     private void initImageLoader() {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(

@@ -52,6 +52,7 @@ public class CommonFragment extends Fragment implements Serializable {
     private ImageLoader imageLoader;
     private View rootView;
     private ImageView homebg;
+    private Bitmap bitmap;
 
     @Nullable
     @Override
@@ -61,6 +62,7 @@ public class CommonFragment extends Fragment implements Serializable {
         DragLayout dragLayout = rootView.findViewById(R.id.drag_layout);
         homebg = rootView.findViewById(R.id.homebg);
         imageView = (ImageView) dragLayout.findViewById(R.id.image);
+
         richPathView = dragLayout.findViewById(R.id.loading);
         animation = new ItemIconAnimation(richPathView);
         animation.animateCommand();
@@ -87,11 +89,22 @@ public class CommonFragment extends Fragment implements Serializable {
     }
 
     public void updateImage(Bitmap bitmap) {
+        this.bitmap = bitmap;
         imageView.setImageBitmap(bitmap);
     }
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+    public void refreshImage(){
+        imageView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshImage();
     }
 
 }

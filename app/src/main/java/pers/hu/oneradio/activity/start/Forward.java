@@ -54,7 +54,8 @@ public class Forward extends PerfectActivity {
         itemIconAnimation = new ItemIconAnimation(commandRichPathView);
         commandRichPathView.setOnPathClickListener((v) -> {
             vibe();
-            update();
+            Toast.makeText(this, "点着舒服吗~~", Toast.LENGTH_SHORT).show();
+            //update();
         });
         Intent home = new Intent(this, Home.class);
 
@@ -83,7 +84,7 @@ public class Forward extends PerfectActivity {
             Toast.makeText(this, "开始请求数据", Toast.LENGTH_SHORT).show();
 
             GetDjIdTask task = new GetDjIdTask();
-            task.execute(DjBoardEnum.HOT);
+            task.execute(DjBoardEnum.RCD);
             ids = task.get();
 
             //TODO:HOME图片缓存队列，可以直接呈现，不用在第二页等待
@@ -91,7 +92,7 @@ public class Forward extends PerfectActivity {
             DjTask djTask = new DjTask(this, ids[random.nextInt(ids.length)], textView, itemIconAnimation);
             djTask.execute();
 
-            Toast.makeText(this, "加载完成", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "加载完成", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(this, "网络超时或者其他错误，请重试一下喽~", Toast.LENGTH_LONG).show();
             e.printStackTrace();

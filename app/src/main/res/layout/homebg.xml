@@ -12,26 +12,39 @@
 
     <com.richpath.RichPathView
         android:id="@+id/loading"
-        android:layout_marginTop="20dp"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         app:vector="@drawable/command" />
 
-    <TextView
-        android:id="@+id/djname"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="130dp"
-        android:layout_width="250dp"
-        android:layout_height="150dp"
-        android:fontFamily="sans-serif-medium"
-        android:textDirection="inherit"
-        android:textIsSelectable="false"
-        android:textStyle="bold"
-        android:textColor="@color/default_bmb_shareLine2Color"
-        android:textAlignment="center"
-        android:autoSizeTextType="uniform"
-        android:text="@string/oneradio" />
+        android:layout_marginTop="70dp"
+        android:background="@drawable/round">
+        <TextView
+            android:id="@+id/djname"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/oneradio"
+            android:textAlignment="center"
+            android:textColor="@color/default_bmb_shareLine2Color"
+            android:textDirection="inherit"
+            android:textIsSelectable="false"
+            android:textStyle="bold" />
 
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_alignBottom="@id/homebg"
+        android:layout_centerInParent="true">
+    </FrameLayout>
 
 </RelativeLayout>

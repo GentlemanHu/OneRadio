@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import pers.hu.oneradio.deal.hand.async.GetDjIdTask;
+import pers.hu.oneradio.deal.listener.OnDataLoadCompleted;
 import pers.hu.oneradio.feel.home.perfectview.CommonFragment;
 import pers.hu.oneradio.deal.hand.async.DjSingleTask;
 import pers.hu.oneradio.net.model.DjBoardEnum;
@@ -29,24 +30,13 @@ import pers.hu.oneradio.net.model.DjDetail;
 public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implements Serializable {
     private Integer[] ids;
     private PerfectPagerAdapter adapter;
+    private int last_position = 0;
     private int position;
-
-    public void addDj(DjDetail dj) {
-        djs.add(dj);
-    }
-
-    public ArrayList<DjDetail> getDjs() {
-        return djs;
-    }
-
-    public void setDjs(ArrayList<DjDetail> djs) {
-        this.djs = djs;
-    }
-
     private ArrayList<DjDetail> djs = new ArrayList<>();
     private Handler handler;
     private ImageView homebg;
     private FragmentManager fm;
+    private OnDataLoadCompleted listener;
     private List idList;
     private ArrayList<CommonFragment> fragments = new ArrayList<CommonFragment>();
     private Random random = new Random();
@@ -55,35 +45,17 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
         super(fm);
     }
 
-    public interface DownloadDateCallback {
-        void onComplete(PerfectPagerAdapter adapter);
-    }
-
-    public PerfectPagerAdapter(FragmentManager fm, Handler handler, Integer[] ids) {
+    public PerfectPagerAdapter(FragmentManager fm, Handler handler, Integer[] ids, OnDataLoadCompleted listener) {
         super(fm);
         adapter = this;
         this.ids = ids;
         this.handler = handler;
         this.fm = fm;
+        this.listener = listener;
         idList = Arrays.stream(ids).collect(Collectors.toList());
         init();
     }
 
-    public PerfectPagerAdapter(FragmentManager fm, Handler handler, Integer[] ids, ImageView homebg) {
-        super(fm);
-        this.homebg = homebg;
-        adapter = this;
-        this.ids = ids;
-        this.handler = handler;
-        this.fm = fm;
-        init();
-    }
-
-    public PerfectPagerAdapter(FragmentManager fm, Integer[] ids) {
-        super(fm);
-        this.ids = ids;
-        init();
-    }
 
     @Override
     public Fragment getItem(int position) {
@@ -91,21 +63,19 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
         //id过少自动请求添加
         if (idList.size() < 3) {
             GetDjIdTask task = new GetDjIdTask();
-            task.execute(DjBoardEnum.RCD);
+            task.execute(DjBoardEnum.HOT);
             try {
                 ids = task.get();
                 List list = Arrays.stream(ids).collect(Collectors.toList());
                 synchronized (idList) {
                     idList.addAll(list);
                 }
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
         if (idList.size() != 0) {
-            final DjSingleTask task = new DjSingleTask(fragments.get(position), this);
+            final DjSingleTask task = new DjSingleTask(fragments.get(position), this, listener);
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
@@ -161,7 +131,11 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
                     Runnable r = new Runnable() {
                         @Override
                         public void run() {
-                            addItem();
+                            CommonFragment fragment = new CommonFragment();
+                            synchronized (fragments) {
+                                fragments.add(fragment);
+                                notifyDataSetChanged();
+                            }
                         }
                     };
                     index++;
@@ -172,4 +146,15 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
         init.run();
     }
 
+    public void addDj(DjDetail dj) {
+        djs.add(dj);
+    }
+
+    public ArrayList<DjDetail> getDjs() {
+        return djs;
+    }
+
+    public void setDjs(ArrayList<DjDetail> djs) {
+        this.djs = djs;
+    }
 }

@@ -4,6 +4,16 @@ public class DjDetail {
     private Integer id;
     private String rcmdtext;
     private String category;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
     private String picUrl;
     private Program[] programs;
 

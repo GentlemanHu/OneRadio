@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import jp.wasabeef.blurry.Blurry;
 import pers.hu.oneradio.activity.home.Home;
 import pers.hu.oneradio.deal.hand.PerfectPagerAdapter;
+import pers.hu.oneradio.deal.listener.OnDataLoadCompleted;
 import pers.hu.oneradio.feel.home.perfectview.CommonFragment;
 import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
 import pers.hu.oneradio.net.model.DjDetail;
@@ -29,9 +30,11 @@ import pers.hu.oneradio.net.model.Program;
 import pers.hu.oneradio.utils.parser.SingleSongParser;
 
 
-public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> implements PerfectPagerAdapter.DownloadDateCallback {
+public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
     private Handler handler;
+    private OnDataLoadCompleted listener;
     private CommonFragment fragment;
+    private Bitmap image;
     private FragmentManager fm;
     private PerfectPagerAdapter adapter;
     private SingleDetailDownloader downloader = new SingleDetailDownloader();
@@ -47,31 +50,37 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> implement
 
     }
 
-    public DjSingleTask(CommonFragment fragment, PerfectPagerAdapter adapter) {
+    public DjSingleTask(CommonFragment fragment, PerfectPagerAdapter adapter, OnDataLoadCompleted listener) {
         this.fragment = fragment;
         this.adapter = adapter;
-    }
-
-    public DjSingleTask(CommonFragment fragment, PerfectPagerAdapter adapter, FragmentManager fm) {
-        this.fragment = fragment;
-        this.adapter = adapter;
-        this.fm = fm;
-    }
-
-    public DjSingleTask(PerfectPagerAdapter adapter) {
-        this.adapter = adapter;
+        this.listener = listener;
     }
 
     @Override
     protected DjDetail doInBackground(String... strings) {
         if (strings.length == 0)
             return null;
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         //通过rid获取dj详情
         DjDetail dj = new DjDetail();
         String raw = downloader.getDjDetailByRid(Integer.valueOf(strings[0]));
         dj.setId((Integer) JSONPath.eval(raw, "$.djRadio.id"));
         dj.setPicUrl((String) JSONPath.eval(raw, "$.djRadio.picUrl"));
         dj.setRcmdtext((String) JSONPath.eval(raw, "$.djRadio.rcmdText"));
+        dj.setCategory((String) JSONPath.eval(raw, "$.djRadio.category"));
+        dj.setName((String) JSONPath.eval(raw, "$.djRadio.name"));
+
+
+        try {
+            URL url = new URL(dj.getPicUrl());
+            image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (strings.length > 1) {
             //通过dj的rid获取program的详情
@@ -84,7 +93,7 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> implement
                 else {
                     ArrayList<JSONObject> programs = (ArrayList<JSONObject>) JSONPath.eval(program_raw, "$.programs[0:]");
                     Program[] pro = new Program[programs.size()];
-                    int index =0;
+                    int index = 0;
                     //获取program下mainsong，设置数据
                     for (JSONObject o : programs) {
                         Program program = o.toJavaObject(Program.class);
@@ -114,17 +123,12 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> implement
         super.onPostExecute(djDetail);
         if (fragment != null && adapter != null) {
             try {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                        .permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-                URL url = new URL(djDetail.getPicUrl());
-                Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                 fragment.updateImage(image);
                 adapter.addDj(djDetail);
-            } catch (IOException e) {
+                listener.onDataLoadCompleted(djDetail);
+            } catch (Exception e) {
                 System.out.println(e);
             }
-
             adapter.notifyDataSetChanged();
         }
         //TODO:加载信息
@@ -139,8 +143,9 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> implement
         super.onProgressUpdate(values);
     }
 
-    //下载完毕后发送刷新UI信息
-    @Override
-    public void onComplete(PerfectPagerAdapter adapter) {
+    private void dealProgramWithOffset(int offset) {
+
     }
+
+
 }

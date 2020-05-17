@@ -75,6 +75,12 @@ public class PerfectActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        Transition.bounce(this);
+        super.onResume();
+    }
+
+    @Override
     protected void onPause() {
         Transition.slide(this);
         super.onPause();

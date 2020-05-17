@@ -22,7 +22,7 @@ public class SmartUrlGetter {
     }
 
     public static String getDjDetailWithProgramsByRid(long id,int offset) {
-        return site + "/dj/program?rid=" + id + "&limit=10"+"&offset="+offset;
+        return site + "/dj/program?rid=" + id + "&limit=20"+"&offset="+offset;
     }
 
     public static String getProgramDetailById(long id) {

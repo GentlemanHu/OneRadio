@@ -136,11 +136,12 @@
             android:layout_gravity="center"
             android:clickable="false"
             app:vector="@drawable/command" />
+
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY" />
+            android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="match_parent"
