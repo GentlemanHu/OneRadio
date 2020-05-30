@@ -13,6 +13,7 @@ import com.lzx.starrysky.control.OnPlayerEventListener;
 import com.lzx.starrysky.notification.CustomNotification;
 import com.lzx.starrysky.notification.NotificationConfig;
 import com.lzx.starrysky.notification.StarrySkyNotificationManager;
+import com.lzx.starrysky.notification.utils.NotificationUtils;
 import com.lzx.starrysky.provider.SongInfo;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;

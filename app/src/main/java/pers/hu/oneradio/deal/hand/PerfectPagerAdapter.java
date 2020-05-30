@@ -1,6 +1,8 @@
 package pers.hu.oneradio.deal.hand;
 
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,29 +31,34 @@ import pers.hu.oneradio.net.model.DjDetail;
 
 public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implements Serializable {
     private Integer[] ids;
-    private PerfectPagerAdapter adapter;
-    private int last_position = 0;
-    private int position;
+    private boolean doNotifyDataSetChangedOnce=true;
     private ArrayList<DjDetail> djs = new ArrayList<>();
     private Handler handler;
-    private ImageView homebg;
-    private FragmentManager fm;
-    private OnDataLoadCompleted listener;
+    private int index = 0;
     private List idList;
-    private ArrayList<CommonFragment> fragments = new ArrayList<CommonFragment>();
+    private volatile ArrayList<CommonFragment> fragments = new ArrayList<CommonFragment>();
     private Random random = new Random();
 
     public PerfectPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public PerfectPagerAdapter(FragmentManager fm, Handler handler, Integer[] ids, OnDataLoadCompleted listener) {
+    public PerfectPagerAdapter(FragmentManager fm, Integer[] ids) {
         super(fm);
-        adapter = this;
         this.ids = ids;
-        this.handler = handler;
-        this.fm = fm;
-        this.listener = listener;
+        this.handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 1:
+                        notifyDataSetChanged();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
         idList = Arrays.stream(ids).collect(Collectors.toList());
         init();
     }
@@ -59,9 +66,8 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
 
     @Override
     public Fragment getItem(int position) {
-        this.position = position;
         //id过少自动请求添加
-        if (idList.size() < 3) {
+        if (idList.size() - index < 3) {
             GetDjIdTask task = new GetDjIdTask();
             task.execute(DjBoardEnum.HOT);
             try {
@@ -75,20 +81,61 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
             }
         }
         if (idList.size() != 0) {
-            final DjSingleTask task = new DjSingleTask(fragments.get(position), this, listener);
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    task.execute(idsSmartGetter(), "jjf");
-                }
-            };
-            handler.postDelayed(r, 100);
+            CommonFragment fragment = fragments.get(position);
+            fragment.setPosition(position);
+            final DjSingleTask task = new DjSingleTask(fragment, handler);
+            synchronized (idList) {
+                String id = String.valueOf(idList.get(index));
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+                        //TODO:获取电台
+                        task.execute(id, "jjf");
+                    }
+                };
+                handler.postDelayed(r, 100);
+                index++;
+            }
         }
         return fragments.get(position);
     }
 
+    public void addItem() {
+        //保证队列里不能过度添加，和后退时不添加
+        if (fragments.size() < idList.size()) {
+            CommonFragment fragment = new CommonFragment();
+            synchronized (fragments) {
+                fragments.add(fragment);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    private void init() {
+        int index = 0;
+        while (index < 5) {
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    CommonFragment fragment = new CommonFragment();
+                    synchronized (fragments) {
+                        fragments.add(fragment);
+                    }
+                    handler.sendEmptyMessage(1);
+                }
+            };
+            r.run();
+            notifyDataSetChanged();
+            index++;
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
+        if (doNotifyDataSetChangedOnce) {
+            doNotifyDataSetChangedOnce = false;
+        }
         return fragments.size();
     }
 
@@ -101,60 +148,5 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
 
     public ArrayList<CommonFragment> getFragments() {
         return fragments;
-    }
-
-    public void addItem() {
-        //保证队列里不能过度添加，和后退时不添加
-        if (fragments.size() - position < 7) {
-            CommonFragment fragment = new CommonFragment();
-            synchronized (fragments) {
-                fragments.add(fragment);
-                notifyDataSetChanged();
-            }
-        }
-    }
-
-    private String idsSmartGetter() {
-        synchronized (idList) {
-            String id = String.valueOf(idList.get(0));
-            idList.remove(0);
-            return id;
-        }
-    }
-
-    private void init() {
-        Runnable init = new Runnable() {
-            @Override
-            public void run() {
-                int index = 0;
-                while (index < 5) {
-                    Runnable r = new Runnable() {
-                        @Override
-                        public void run() {
-                            CommonFragment fragment = new CommonFragment();
-                            synchronized (fragments) {
-                                fragments.add(fragment);
-                                notifyDataSetChanged();
-                            }
-                        }
-                    };
-                    index++;
-                    handler.postDelayed(r, 100);
-                }
-            }
-        };
-        init.run();
-    }
-
-    public void addDj(DjDetail dj) {
-        djs.add(dj);
-    }
-
-    public ArrayList<DjDetail> getDjs() {
-        return djs;
-    }
-
-    public void setDjs(ArrayList<DjDetail> djs) {
-        this.djs = djs;
     }
 }

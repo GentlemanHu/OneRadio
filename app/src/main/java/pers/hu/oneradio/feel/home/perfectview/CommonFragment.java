@@ -42,6 +42,16 @@ import pers.hu.oneradio.feel.home.animation.Transition;
  */
 public class CommonFragment extends Fragment implements Serializable {
     private ImageView imageView;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    private int position;
     private View address1, address2, address4, address5;
     private TextView address3;
     private RatingBar ratingBar;

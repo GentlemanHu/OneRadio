@@ -11,8 +11,8 @@ import java.util.List;
 import pers.hu.oneradio.net.model.DjDetail;
 
 public class SongListManager {
-    private static Hashtable<Integer, ArrayList<SongInfo>> allSongPlaylist = new Hashtable<>();
-    private static ArrayList<DjDetail> djDetails = new ArrayList<>();
+    private static volatile Hashtable<Integer, ArrayList<SongInfo>> allSongPlaylist = new Hashtable<>();
+    private static volatile ArrayList<DjDetail> djDetails = new ArrayList<>();
 
     public SongListManager() {
     }
@@ -36,4 +36,9 @@ public class SongListManager {
     public static ArrayList<SongInfo> getSongPlaylist(Integer position) {
         return allSongPlaylist.get(position);
     }
+
+    public static int getListSize() {
+        return allSongPlaylist.size();
+    }
+
 }

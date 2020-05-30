@@ -71,12 +71,21 @@ public class GetDjIdTask extends AsyncTask<DjBoardEnum, Boolean, Integer[]> {
                 publishProgress(true);
                 return idss;
             case TODAY:
+                //TODO：为避免null，暂时使用HOT中代替TODAY，待到完善接口，需要更改
                 System.out.println("not implemented yet!");
+                parser.parseDjs(detailDownloader.getDjHot());
+                List<DjDetail> detailz = parser.getDjs();
+                Integer[] idz = new Integer[detailz.size()];
+                int indez = 0;
+                for (DjDetail dj : detailz
+                ) {
+                    idz[indez] = dj.getId();
+                    indez++;
+                }
                 publishProgress(true);
-                break;
+                return idz;
             default:
                 return null;
         }
-        return null;
     }
 }

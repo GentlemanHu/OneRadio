@@ -8,7 +8,7 @@
 
     <include layout="@layout/homebg" />
 
-    <androidx.viewpager.widget.ViewPager
+    <pers.hu.oneradio.feel.home.perfectview.PerfectViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
         android:paddingLeft="48dp"
         android:paddingEnd="48dp"
         android:paddingRight="48dp" >
-    </androidx.viewpager.widget.ViewPager>
+    </pers.hu.oneradio.feel.home.perfectview.PerfectViewPager>
 
     <com.nightonke.boommenu.BoomMenuButton
         android:id="@+id/boom"
@@ -28,6 +28,22 @@
         android:layout_marginTop="30dp"
         app:bmb_normalColor="#00ffffff"
         app:bmb_shadowColor="#00ffffff" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/oval"
+        android:layout_alignParentBottom="true"
+        >
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.MultiplePulseRing"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorAccent" />
+    </FrameLayout>
 
 
 </RelativeLayout>

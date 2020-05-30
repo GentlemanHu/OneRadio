@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
+import com.lzx.starrysky.provider.SongInfo;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,20 +24,19 @@ import jp.wasabeef.blurry.Blurry;
 import pers.hu.oneradio.activity.home.Home;
 import pers.hu.oneradio.deal.hand.PerfectPagerAdapter;
 import pers.hu.oneradio.deal.listener.OnDataLoadCompleted;
+import pers.hu.oneradio.deal.music.SongListManager;
 import pers.hu.oneradio.feel.home.perfectview.CommonFragment;
 import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
 import pers.hu.oneradio.net.model.DjDetail;
 import pers.hu.oneradio.net.model.Program;
+import pers.hu.oneradio.net.model.Song;
 import pers.hu.oneradio.utils.parser.SingleSongParser;
 
 
 public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
     private Handler handler;
-    private OnDataLoadCompleted listener;
     private CommonFragment fragment;
     private Bitmap image;
-    private FragmentManager fm;
-    private PerfectPagerAdapter adapter;
     private SingleDetailDownloader downloader = new SingleDetailDownloader();
     private SingleSongParser parser = new SingleSongParser();
 
@@ -50,10 +50,9 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
 
     }
 
-    public DjSingleTask(CommonFragment fragment, PerfectPagerAdapter adapter, OnDataLoadCompleted listener) {
+    public DjSingleTask(CommonFragment fragment, Handler handler) {
         this.fragment = fragment;
-        this.adapter = adapter;
-        this.listener = listener;
+        this.handler = handler;
     }
 
     @Override
@@ -121,15 +120,14 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
     @Override
     protected void onPostExecute(DjDetail djDetail) {
         super.onPostExecute(djDetail);
-        if (fragment != null && adapter != null) {
+        if (fragment != null && handler != null) {
             try {
                 fragment.updateImage(image);
-                adapter.addDj(djDetail);
-                listener.onDataLoadCompleted(djDetail);
+                addSongListAndSet(djDetail,fragment.getPosition());
             } catch (Exception e) {
                 System.out.println(e);
             }
-            adapter.notifyDataSetChanged();
+            handler.sendEmptyMessage(1);
         }
         //TODO:加载信息
         if (handler != null) {
@@ -143,9 +141,26 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
         super.onProgressUpdate(values);
     }
 
-    private void dealProgramWithOffset(int offset) {
+    private void addSongListAndSet(DjDetail dj,int position){
+        ArrayList songInfos = new ArrayList();
+        Program[] songs = dj.getPrograms();
+        for (Program s : songs) {
+            Song song = s.getMainSong();
+            SongInfo songInfo = new SongInfo();
+            songInfo.setSongUrl(song.getUrl());
+            songInfo.setSongId(s.getMainSong().getId().toString());
+            songInfo.setSongName(dj.getName());
+            songInfo.setArtist(dj.getRcmdtext());
+            songInfo.setSongCover(dj.getPicUrl());
+            System.out.println(song.getUrl());
+            songInfos.add(songInfo);
+        }
 
+        SongListManager.addPlayList(position, songInfos);
+        SongListManager.addDjDetail(dj);
     }
+
+
 
 
 }

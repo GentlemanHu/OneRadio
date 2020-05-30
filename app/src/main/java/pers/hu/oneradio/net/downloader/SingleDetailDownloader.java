@@ -3,10 +3,16 @@ package pers.hu.oneradio.net.downloader;
 
 import org.jsoup.Jsoup;
 
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import pers.hu.oneradio.net.SmartUrlGetter;
 import pers.hu.oneradio.utils.othertest.DjCategory;
 
 public class SingleDetailDownloader extends BaseDetailDownloader {
+    private final OkHttpClient client = new OkHttpClient();
     //TODO:未使用异步处理
 
     @Override
@@ -19,7 +25,24 @@ public class SingleDetailDownloader extends BaseDetailDownloader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return content;
+        //use okhttp test speed
+        String ok_raw = "";
+        try {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            Response responses = null;
+            try {
+                responses = client.newCall(request).execute();
+                ok_raw = responses.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok_raw;
     }
 
     public String getDjHot() {
@@ -38,8 +61,8 @@ public class SingleDetailDownloader extends BaseDetailDownloader {
         return getData(SmartUrlGetter.getProgramDetailById(id));
     }
 
-    public String getDjDetailWithProgramsByRid(long id,int offset) {
-        return getData(SmartUrlGetter.getDjDetailWithProgramsByRid(id,offset));
+    public String getDjDetailWithProgramsByRid(long id, int offset) {
+        return getData(SmartUrlGetter.getDjDetailWithProgramsByRid(id, offset));
     }
 
     public String getDjDetailByRid(long rid) {

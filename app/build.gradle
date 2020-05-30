@@ -11,13 +11,13 @@ android {
         minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
-        versionName "release 1.1"
+        versionName "release 1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
 //        debug {
 //            minifyEnabled true
@@ -46,12 +46,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    // https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client
+    // https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client 暂时未用到
     api group: 'org.asynchttpclient', name: 'async-http-client', version: '2.12.1'
-    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup 从mvn项目中抄来
     api group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
     // https://mvnrepository.com/artifact/com.alibaba/fastjson
     api group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
+    // 查看几个app源码，发现都用的okhttp
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
     // music player
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.lzx:StarrySkyKt:2.4.2'
@@ -75,7 +77,10 @@ dependencies {
     // wave
     //implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
     // music visualize
-    implementation 'com.cleveroad:audiovisualization:1.0.1'
+    //implementation 'com.yalantis:eqwaves:1.0.1'
+    implementation 'com.gauravk.audiovisualizer:audiovisualizer:0.9.2'
+    // loading animation
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
 
 }
