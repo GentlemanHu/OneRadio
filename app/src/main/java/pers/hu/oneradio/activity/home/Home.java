@@ -43,6 +43,7 @@ import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import com.richpath.RichPathView;
+import com.tmall.ultraviewpager.UltraViewPagerAdapter;
 
 
 import java.util.ArrayList;
@@ -75,13 +76,13 @@ import pers.hu.oneradio.utils.Utils;
 public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoadCompleted {
     private ItemIconAnimation animation;
     private int last_position;
-    private OnTaskCompleted dealer = this;
+    private final OnTaskCompleted dealer = this;
     private RichPathView load;
     private static int position = 0;
     private Integer list_position = 0;
     private TextView djName;
     private ImageView homebg;
-    private Random random = new Random();
+    private final Random random = new Random();
     private RelativeLayout homelayout;
     private Context home;
     private Visualizer visualizer;
@@ -90,7 +91,7 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
     private DjDetail dj;
     private ArrayList<SongInfo> songInfos;
     private PerfectPagerAdapter adapter;
-    private volatile ArrayList<CommonFragment> fragments = new ArrayList<>();
+    private final ArrayList<CommonFragment> fragments = new ArrayList<>();
     private PerfectViewPager viewPager;
     private Integer[] ids;
     private BoomMenuButton boom;
@@ -155,7 +156,7 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
         viewPager.setOffscreenPageLimit(7);
         viewPager.setDefaultTransformer();
         //动态添加page
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

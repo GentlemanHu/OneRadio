@@ -8,9 +8,11 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.tmall.ultraviewpager.UltraViewPager;
+
 import pers.hu.oneradio.activity.home.Home;
 
-public class PerfectViewPager extends ViewPager {
+public class PerfectViewPager extends UltraViewPager {
     private PagerAdapter adapter;
     private Context context;
 

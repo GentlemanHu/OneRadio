@@ -54,6 +54,10 @@ dependencies {
     api group: 'com.alibaba', name: 'fastjson', version: '1.2.68'
     // 查看几个app源码，发现都用的okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+    // ultraviewpager
+    implementation ('com.alibaba.android:ultraviewpager:1.0.7.7@aar') {
+        transitive = true
+    }
     // music player
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.lzx:StarrySkyKt:2.4.2'

@@ -7,6 +7,10 @@ import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
 import pers.hu.oneradio.net.model.Song;
 import pers.hu.oneradio.utils.parser.SingleSongParser;
 
+/**
+ * @author Gentleman.Hu
+ * @since 1.0
+ */
 @Deprecated
 public class MusicHelper {
     private  Random random = new Random();
