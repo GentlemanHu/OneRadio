@@ -3,7 +3,7 @@ package pers.hu.oneradio.net;
 import pers.hu.oneradio.utils.othertest.DjCategory;
 
 final public class SmartUrlGetter {
-    final static String site = "http://www.crushing.xyz:3000";
+    final static String site = "http://123.57.248.202:3000";
 
     public static String getSongDetailById(long id) {
         return site + "/song/detail?ids=" + id;

@@ -84,7 +84,7 @@ public class Forward extends PerfectActivity {
     private void update() {
         try {
             Toast.makeText(this, "开始请求电台列表数据~", Toast.LENGTH_SHORT).show();
-
+            itemIconAnimation.animateCommand();
             GetDjIdTask task = new GetDjIdTask(forward);
             task.execute(DjBoardEnum.getRandomDjEnum());
 
