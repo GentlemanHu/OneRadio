@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class OneRadioApplication extends Application {
+    private String config;
 
     @Override
     public void onCreate() {
@@ -38,8 +39,15 @@ public class OneRadioApplication extends Application {
         initImageLoader();
     }
 
+    public String getConfig() {
+        return config;
+    }
 
-    private void initPlayer(){
+    public void setConfig(String config) {
+        this.config = config;
+    }
+
+    private void initPlayer() {
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setTargetClass("pers.hu.oneradio.activity.home.Home");
 
@@ -48,8 +56,9 @@ public class OneRadioApplication extends Application {
                 .setNotificationFactory(StarrySkyNotificationManager.Companion.getSYSTEM_NOTIFICATION_FACTORY())
                 .setNotificationConfig(notificationConfig)
                 .build();
-        StarrySky.Companion.init(this,config);
+        StarrySky.Companion.init(this, config);
     }
+
     @SuppressWarnings("deprecation")
     private void initImageLoader() {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(

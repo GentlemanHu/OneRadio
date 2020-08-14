@@ -1,5 +1,6 @@
 package pers.hu.oneradio.utils.parser;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -18,11 +19,18 @@ import pers.hu.oneradio.net.model.SingleObjectModel;
 import pers.hu.oneradio.net.model.Song;
 
 public class SingleSongParser {
-    private static SingleDetailDownloader downloader = new SingleDetailDownloader();
+    private  SingleDetailDownloader downloader;
     private List<Song> songs;
+    private Context context;
     private Song song;
+    private SmartUrlGetter urlGetter;
 
-
+    public SingleSongParser(Context context){
+        this.context = context;
+        downloader = new SingleDetailDownloader(context);
+        urlGetter=new SmartUrlGetter(context);
+        System.out.println(urlGetter.getConfig()+"<-----from SingleSongParser");
+    }
     public List<Song> toSongData(String programStr) {
         JSONObject object = JSON.parseObject(programStr);
         List<String> name = (List<String>) JSONPath.eval(object, "$programs[0:].mainSong.name");
@@ -104,7 +112,7 @@ public class SingleSongParser {
         String picUrl = "";
 
         //获取真实ID
-        String raw = downloader.getData(SmartUrlGetter.getDjDetailByRid(detailID));
+        String raw = downloader.getData(urlGetter.getDjDetailByRid(detailID));
         System.out.println(raw);
         JSONObject object1 = JSON.parseObject(raw);
         JSONObject djradio = (JSONObject) object1.get("djRadio");

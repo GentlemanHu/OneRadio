@@ -1,6 +1,7 @@
 package pers.hu.oneradio.deal.hand.async;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -37,8 +38,8 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
     private Handler handler;
     private CommonFragment fragment;
     private Bitmap image;
-    private SingleDetailDownloader downloader = new SingleDetailDownloader();
-    private SingleSongParser parser = new SingleSongParser();
+    private SingleDetailDownloader downloader;
+    private SingleSongParser parser;
 
     @Deprecated
     @SuppressWarnings("由于暂且在Home中使用listen方式填充背景，handler暂时没用")
@@ -46,11 +47,16 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
         this.handler = handler;
     }
 
-    public DjSingleTask() {
-
-    }
 
     public DjSingleTask(CommonFragment fragment, Handler handler) {
+        this.fragment = fragment;
+        this.handler = handler;
+    }
+
+    // pass context
+    public DjSingleTask(CommonFragment fragment, Handler handler, Context context) {
+        downloader = new SingleDetailDownloader(context);
+        parser = new SingleSongParser(context);
         this.fragment = fragment;
         this.handler = handler;
     }
@@ -123,7 +129,7 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
         if (fragment != null && handler != null) {
             try {
                 fragment.updateImage(image);
-                addSongListAndSet(djDetail,fragment.getPosition());
+                addSongListAndSet(djDetail, fragment.getPosition());
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -141,7 +147,7 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
         super.onProgressUpdate(values);
     }
 
-    private void addSongListAndSet(DjDetail dj,int position){
+    private void addSongListAndSet(DjDetail dj, int position) {
         ArrayList songInfos = new ArrayList();
         Program[] songs = dj.getPrograms();
         for (Program s : songs) {
@@ -159,8 +165,6 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
         SongListManager.addPlayList(position, songInfos);
         SongListManager.addDjDetail(dj);
     }
-
-
 
 
 }

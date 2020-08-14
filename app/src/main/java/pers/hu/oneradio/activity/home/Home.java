@@ -134,7 +134,7 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
     //初始化，采用handler异步延迟启动，防止阻塞主线程
     private void init() {
         ids = Arrays.stream(getIntent().getIntArrayExtra("ids")).boxed().toArray(Integer[]::new);
-        adapter = new PerfectPagerAdapter(getSupportFragmentManager(), ids);
+        adapter = new PerfectPagerAdapter(getSupportFragmentManager(), ids,this);
         viewPager.setAdapter(adapter);
 
         Thread thread = new Thread() {

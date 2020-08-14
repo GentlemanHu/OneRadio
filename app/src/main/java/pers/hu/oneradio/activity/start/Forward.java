@@ -25,9 +25,7 @@ import pers.hu.oneradio.activity.PerfectActivity;
 import pers.hu.oneradio.activity.home.Home;
 import pers.hu.oneradio.deal.hand.async.GetDjIdTask;
 import pers.hu.oneradio.feel.home.animation.ItemIconAnimation;
-import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
 import pers.hu.oneradio.deal.hand.async.DjTask;
-import pers.hu.oneradio.deal.music.MusicHelper;
 import pers.hu.oneradio.net.model.DjBoardEnum;
 
 public class Forward extends PerfectActivity {
@@ -85,7 +83,7 @@ public class Forward extends PerfectActivity {
         try {
             Toast.makeText(this, "开始请求电台列表数据~", Toast.LENGTH_SHORT).show();
             itemIconAnimation.animateCommand();
-            GetDjIdTask task = new GetDjIdTask(forward);
+            GetDjIdTask task = new GetDjIdTask(forward,this);
             task.execute(DjBoardEnum.getRandomDjEnum());
 
             //TODO:HOME图片缓存队列，可以直接呈现，不用在第二页等待

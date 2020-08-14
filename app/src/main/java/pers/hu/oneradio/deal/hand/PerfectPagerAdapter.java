@@ -1,5 +1,6 @@
 package pers.hu.oneradio.deal.hand;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -23,7 +24,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import pers.hu.oneradio.deal.hand.async.GetDjIdTask;
-import pers.hu.oneradio.deal.listener.OnDataLoadCompleted;
 import pers.hu.oneradio.feel.home.perfectview.CommonFragment;
 import pers.hu.oneradio.deal.hand.async.DjSingleTask;
 import pers.hu.oneradio.net.model.DjBoardEnum;
@@ -31,7 +31,8 @@ import pers.hu.oneradio.net.model.DjDetail;
 
 public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implements Serializable {
     private Integer[] ids;
-    private boolean doNotifyDataSetChangedOnce=true;
+    private Context context;
+    private boolean doNotifyDataSetChangedOnce = true;
     private ArrayList<DjDetail> djs = new ArrayList<>();
     private Handler handler;
     private int index = 0;
@@ -43,9 +44,10 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
         super(fm);
     }
 
-    public PerfectPagerAdapter(FragmentManager fm, Integer[] ids) {
+    public PerfectPagerAdapter(FragmentManager fm, Integer[] ids, Context context) {
         super(fm);
         this.ids = ids;
+        this.context = context;
         this.handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -68,7 +70,7 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
     public Fragment getItem(int position) {
         //id过少自动请求添加
         if (idList.size() - index < 3) {
-            GetDjIdTask task = new GetDjIdTask();
+            GetDjIdTask task = new GetDjIdTask(context);
             task.execute(DjBoardEnum.HOT);
             try {
                 ids = task.get();
@@ -83,7 +85,7 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
         if (idList.size() != 0) {
             CommonFragment fragment = fragments.get(position);
             fragment.setPosition(position);
-            final DjSingleTask task = new DjSingleTask(fragment, handler);
+            final DjSingleTask task = new DjSingleTask(fragment, handler, context);
             synchronized (idList) {
                 String id = String.valueOf(idList.get(index));
                 Runnable r = new Runnable() {

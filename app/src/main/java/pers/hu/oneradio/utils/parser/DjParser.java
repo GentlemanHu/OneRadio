@@ -14,6 +14,7 @@ public class DjParser {
 
     //TODO:异常处理等，优化
     public void parseDjs(String djraws){
+        System.out.println(djraws+"from dj raws");
         JSONObject obj = JSON.parseObject(djraws);
         JSONArray array = obj.getJSONArray("djRadios");
         for (Object o:array

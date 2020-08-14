@@ -17,8 +17,7 @@ import pers.hu.oneradio.net.downloader.SingleDetailDownloader;
 import pers.hu.oneradio.net.model.DjDetail;
 
 public class DjTask extends AsyncTask<Void, Boolean, DjDetail[]> {
-    private SingleDetailDownloader downloader = new SingleDetailDownloader();
-    private Context context;
+    private SingleDetailDownloader downloader;
     private Forward activity;
     private String[] strings;
     private Integer id;
@@ -32,6 +31,7 @@ public class DjTask extends AsyncTask<Void, Boolean, DjDetail[]> {
 
     public DjTask(Forward activity, Integer id, TextView text, ItemIconAnimation... animations) {
         this.activity = activity;
+        downloader = new SingleDetailDownloader(activity);
         whatobj.add(text);
         this.id = id;
         this.text = text;
@@ -41,16 +41,6 @@ public class DjTask extends AsyncTask<Void, Boolean, DjDetail[]> {
         }
     }
 
-    public DjTask(Context context, Integer[] ids, ItemIconAnimation... animations) {
-        this.context = context;
-        this.ids = ids;
-        if (animations != null) {
-            this.animations = new ItemIconAnimation[animations.length];
-            for (int i = 0; i < animations.length; i++) {
-                this.animations[i] = animations[i];
-            }
-        }
-    }
 
     @Override
     protected void onPreExecute() {
@@ -68,7 +58,7 @@ public class DjTask extends AsyncTask<Void, Boolean, DjDetail[]> {
 
     @Override
     protected void onPostExecute(DjDetail[] djDetails) {
-        if (djDetails != null&&whatobj.size()!=0) {
+        if (djDetails != null && whatobj.size() != 0) {
             super.onPostExecute(djDetails);
             if (whatobj.get(0) instanceof TextView) {
                 for (DjDetail djDetail : djDetails
