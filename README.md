@@ -1,85 +1,88 @@
-<<<<<<< HEAD
-## OneRadio 收音机
 
+## OneRadio 电台
+> 简单地一个电台，为记录自己编程、认知水平，供以后回首。
 ---
-#### 整体架构
+#### 整体结构
 
-<pre><code class="java">
+<pre>
+<code class="java">
     |- pers.hu.oneradio
-            |- activities   //活动或UI包
-            |- net          //网络处理相关包
-            |- utils        //工具类包
-            <s>|- controllers  //控制器包(暂不需要)</s>
-    |- MainActivity.java    //入口
+            |- activity  //activities
+            |- deal       //handler和一些异步处理类
+            |- feel        //一些自定义组件、动画等
+            |- net          //网络相关类
+            |- utils        //工具类
+    |- Home.java    // 主activity
+</code>
+</pre>
+### 整体实现
 
+![image-20200820120213736](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/image-20200820120213736.png)
 
-    ------------------
-    |- res
-        |- layout //UI布局
-        |- values //变量注册信息
+### 初期的prototype规划
 
-</code></pre>
-> 说明：UI布局不需要创建Activity，只需要在layout中创建布局信息，搞好就行
-> 如果layout中布局信息的组件<自定义命名>，请在values中对应变量中注册添加
+![image-20200820120036306](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/image-20200820120036306.png)
 
+### 用到的NeteasemusicAPI接口
 
----
+![image-20200820115927922](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/image-20200820115927922.png)
 
-- [ ] 基本功能
-  - [ ] 收听网络音频流（电台）
-    - [ ] 切换音频流（电台）
-    - [ ] 随机电台
-    - [ ] 收听历史记录
-    - [ ] 收听类型选择
-    - [ ] 电台配图
-    - [ ] 电台录音（缓存）和回放
-    - [ ] 手机下拉显示控制器
-    - [ ] ~~电台黑名单和白名单~~
+### 部分截图和思路
+—> [PART](https://github.com/GentlemanHu/OneRadio/blob/stable/PART.md) <---
 
-<s>
-  - [ ] 其它特性
-  - 能够按照口味推荐
-  - 能够按照时间推荐
-  - 背景配图沉浸
-</s>
+### 初期功能设想
 
-- 学习
-  - 能按照收听的历史推荐
-  - 通过学习收听类型进行推送
+- [ ] 计划实现
+  - [x] 收听电台
+  - [x] 切换电台
+  - [x] 随机电台
+  - [x] 手机下拉显示控制器
+  - [x] 电台配图
+  - [ ] 收听历史记录
+  - [ ] 收听类型选择
+  - [ ] 电台录音（缓存）和回放
+  - [ ] 电台黑名单和白名单
+  - [ ] 其他待灵感闪现..
 
-
----
-
-### ***特性***
----
-- TODO:待添加
-- FINAL: 代码重构，适配，应用优秀设计原则和模式，符合一般规范
-- 大多数只是为了实现而实现，并未采取最优资源和性能，需要重构
-
-
-# 问题
-- [ ] 获取歌曲链接异步处理，防止阻塞主线程
-- [ ] 动态渲染电台列表
-- [ ] 更舒服的响应，异步网络请求时候加上动画
-- [ ] 缓存处理，自动清理规则算法
+## 问题
+- [x] 获取歌曲链接异步处理，防止阻塞主线程
+- [x] 动态渲染电台列表
+- [x] 更舒服的响应，异步网络请求时候加上动画
+- [ ] 代码重构，适配，应用优秀设计原则和模式，符合一般规范 `!important`
+- [ ] 大多数只是为了实现而实现，并未采取最优资源和性能，需要重构 `!important`
+- [ ] 初步编写时为了方便，context传入混乱，有内存泄露问题 `!important`
+- [ ] 缓存处理，自动清理规则
 - [ ] 电台实时收听和回放区分，处理实时音频流
 - [ ] 简化代码，图片等缩减体积，提升启动性能
+- [ ] 待发现..
 
+## TODO
 
-# TODO
-- boom 菜单优化，添加about界面
-- music manager编写，异步类编写
-- 加载图片动画简单实现，但是加载监听不生效。。。
-- 背景虚化度用户可调节实现，设置中添加
-- 真实异步启动，添加图片缓存队列，进入主界面直接完全呈现
-- 大多数加载动画并没有在加载完成后并没有取消，而是覆盖了！找到解决办法
-- 采用线程池，让handler的线程任务得到更好的管理
-- 无法adapter异步加载，想法通过后台服务来请求数据，避免阻塞UI线程！
-- 并发控制，上限，防止过高并发崩溃
-- 
+- [ ] boom 菜单优化，完善about界面
+- [ ] music manager管理器
+- [ ] 加载逻辑和动画完善
+- [ ] 背景虚化度用户设置可调节实现
+- [ ] 更优雅的启动，更好的响应，图片缓存等
+- [ ] 更好的线程控制
+- [ ] 更好的异步处理方式
+- [ ] 更好的并行和并发处理控制
+- [ ] 待灵感闪现
 ---
+
+## 后记
+
+- 本项目为初学项目，各种规范和风格尚未确立。
+- 各个界面和风格为个人口味。
+- 初衷为记录学习过程，供回首，总结和进步。
+- 功能简单且不完善，通过后期学习使其完美。
+
+
+
+> 我思故我在. I am not my body , and I am not even my mind.
+
+
 # OneRadio
-One Radio ,One Feel, Only One.   One app full of radio and love.
-\>>>>>>> origin/master
-- liuliutest  ok>>>>>>>>>>>>>>>
+
+One Radio ,One Feel, One World.   One app full of radio and love.
+
 
