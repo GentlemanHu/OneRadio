@@ -22,6 +22,7 @@ public class OAlertDialog {
 
 // Set up the input
         final EditText input = new EditText(context);
+        input.setText("https://musicapi.leanapp.cn");
 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
         builder.setView(input);

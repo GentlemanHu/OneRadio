@@ -127,7 +127,7 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
         boomInit();
 
         init();
-        new showMessageAsync().execute();
+        //new showMessageAsync().execute();
 
     }
 
