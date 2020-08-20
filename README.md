@@ -17,18 +17,27 @@
 </pre>
 ### 整体实现
 
-![image-20200820120213736](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/image-20200820120213736.png)
+![整体](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200820143812.png)
 
 ### 初期的prototype规划
 
-![image-20200820120036306](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/image-20200820120036306.png)
+![OneRadio](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200820143902.png)
 
 ### 用到的NeteasemusicAPI接口
 
-![image-20200820115927922](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/image-20200820115927922.png)
+![OneRadio-](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200820143924.png)
 
 ### 部分截图和思路
-—> [PART](https://github.com/GentlemanHu/OneRadio/blob/stable/PART.md) <---
+
+—> [PART](https://github.com/GentlemanHu/OneRadio/blob/stable/PART.md) <— 图
+
+—> [视频演示](https://streamja.com/5raGz)<---视频
+
+|                             Load                             |                             Main                             |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| ![1](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200820150110.gif) | ![2](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200820150155.gif) |
+
+
 
 ### 初期功能设想
 
@@ -67,7 +76,31 @@
 - [ ] 更好的异步处理方式
 - [ ] 更好的并行和并发处理控制
 - [ ] 待灵感闪现
+
 ---
+<details>
+<summary>Dependencies</summary>
+implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+implementation fileTree(dir: 'libs', include: ['*.jar'])
+implementation 'com.lzx:StarrySkyKt:2.4.2'
+implementation 'com.github.florent37:materialviewpager:1.2.3'
+implementation 'com.flaviofaria:kenburnsview:1.0.7'
+implementation 'com.jpardogo.materialtabstrip:library:1.1.0'
+implementation 'com.github.bumptech.glide:glide:4.0.0'
+//RichPath
+implementation 'com.github.tarek360.RichPath:animator:0.1.1'
+//menu pop bom!
+implementation 'com.nightonke:boommenu:2.1.1'
+//slide image CardSlider   https://github.com/Ramotion/cardslider-android
+implementation 'com.ramotion.cardslider:card-slider:0.3.1'
+// image loader
+implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+// blur bg
+implementation 'jp.wasabeef:blurry:3.0.0'
+implementation 'com.gauravk.audiovisualizer:audiovisualizer:0.9.2'
+// loading animation
+implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+</details>
 
 ## 后记
 
@@ -79,7 +112,6 @@
 
 
 > 我思故我在. I am not my body , and I am not even my mind.
-
 
 # OneRadio
 
