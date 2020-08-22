@@ -35,7 +35,7 @@
 
 |                             Load                             |                             Main                             |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| ![1](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200820150110.gif) | ![2](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200820150155.gif) |
+| ![afe1](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200822174744.gif) | ![afer2](https://cdn.jsdelivr.net/gh/gentlemanhu/public-store/images/20200822174821.gif) |
 
 
 
