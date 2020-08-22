@@ -80,6 +80,8 @@
 ---
 <details>
 <summary>Dependencies</summary>
+<pre>
+<code class="bash">
 implementation 'com.squareup.okhttp3:okhttp:4.7.2'
 implementation fileTree(dir: 'libs', include: ['*.jar'])
 implementation 'com.lzx:StarrySkyKt:2.4.2'
@@ -100,6 +102,8 @@ implementation 'jp.wasabeef:blurry:3.0.0'
 implementation 'com.gauravk.audiovisualizer:audiovisualizer:0.9.2'
 // loading animation
 implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+</code>
+</pre>
 </details>
 
 ## 后记
