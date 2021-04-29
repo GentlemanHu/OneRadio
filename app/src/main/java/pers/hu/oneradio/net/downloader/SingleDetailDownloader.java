@@ -19,20 +19,11 @@ public class SingleDetailDownloader extends BaseDetailDownloader {
     private SmartUrlGetter urlGetter;
 
     public SingleDetailDownloader(Context context){
-        urlGetter=new SmartUrlGetter(context);
+        urlGetter=SmartUrlGetter.UrlGetterProvider.getInstance();
         System.out.println(urlGetter.getConfig()+"<-----from SingleDetailDownloader");
     }
     @Override
     public String getData(String url) {
-        String content = "";
-        //send request and get data
-        try {
-            content = Jsoup.connect(url).ignoreContentType(true).maxBodySize(0).timeout(20000).execute().body();
-            //System.out.println(content);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //use okhttp test speed
         String ok_raw = "";
         try {
             Request request = new Request.Builder()

@@ -1,6 +1,7 @@
 package pers.hu.oneradio.activity.start;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,7 +30,7 @@ import pers.hu.oneradio.deal.hand.async.DjTask;
 import pers.hu.oneradio.net.model.DjBoardEnum;
 
 public class Forward extends PerfectActivity {
-    private Random random = new Random();
+    private final Random random = new Random();
     private ItemIconAnimation itemIconAnimation;
     private RichPathView commandRichPathView;
     private TextView textView;
@@ -44,7 +45,7 @@ public class Forward extends PerfectActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        vibrator = (Vibrator) this.getSystemService(this.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         textView = findViewById(R.id.songName);
         bg = findViewById(R.id.bg);
 
@@ -100,15 +101,11 @@ public class Forward extends PerfectActivity {
         DjTask djTask = new DjTask(Forward.this, ids[random.nextInt(ids.length)], textView, itemIconAnimation);
         djTask.execute();
 
-        Runnable jump = new Runnable() {
-            @Override
-            public void run() {
-                //TODO：反复转换数据类型，需要重构
-                int[] intArray = Arrays.stream(ids).mapToInt(Integer::intValue).toArray();
-                home.putExtra("ids", intArray);
-                startActivity(home);
-                finish();
-            }
+        Runnable jump = () -> {
+            int[] intArray = Arrays.stream(ids).mapToInt(Integer::intValue).toArray();
+            home.putExtra("ids", intArray);
+            startActivity(home);
+            finish();
         };
         forward.postDelayed(jump, 3000);
     }

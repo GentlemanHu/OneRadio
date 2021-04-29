@@ -6,9 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.StrictMode;
+import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.alibaba.fastjson.JSON;
@@ -22,7 +26,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import jp.wasabeef.blurry.Blurry;
+import pers.hu.oneradio.OneRadioApplication;
 import pers.hu.oneradio.activity.home.Home;
+import pers.hu.oneradio.base.TaskExecutor;
 import pers.hu.oneradio.deal.hand.PerfectPagerAdapter;
 import pers.hu.oneradio.deal.listener.OnDataLoadCompleted;
 import pers.hu.oneradio.deal.music.SongListManager;
@@ -84,6 +90,8 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
             URL url = new URL(dj.getPicUrl());
             image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
         } catch (IOException e) {
+            this.cancel(true);
+            TaskExecutor.runInMainThread(() -> Toast.makeText(OneRadioApplication.getContext(), "获取信息发生错误，请重试", Toast.LENGTH_SHORT).show());
             e.printStackTrace();
         }
 
@@ -115,6 +123,7 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
             }
         }
         publishProgress(true);
+        Log.println(Log.ERROR, "OnPageSelected", dj.toString());
         return dj;
     }
 
@@ -130,6 +139,7 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
             try {
                 fragment.updateImage(image);
                 addSongListAndSet(djDetail, fragment.getPosition());
+                Log.d("FragmentPostion",String.valueOf(fragment.getPosition()));
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -148,21 +158,24 @@ public class DjSingleTask extends AsyncTask<String, Boolean, DjDetail> {
     }
 
     private void addSongListAndSet(DjDetail dj, int position) {
-        ArrayList songInfos = new ArrayList();
+        ArrayList<SongInfo> songInfos = new ArrayList<SongInfo>();
         Program[] songs = dj.getPrograms();
         for (Program s : songs) {
+            Log.d("SongListAsync",s.getMainSong().getName());
             Song song = s.getMainSong();
             SongInfo songInfo = new SongInfo();
             songInfo.setSongUrl(song.getUrl());
-            songInfo.setSongId(s.getMainSong().getId().toString());
+            songInfo.setSongId(song.getId().toString());
             songInfo.setSongName(dj.getName());
             songInfo.setArtist(dj.getRcmdtext());
             songInfo.setSongCover(dj.getPicUrl());
-            System.out.println(song.getUrl());
+            Log.d("SongListAsyncInfo","SongArtist"+songInfo.getArtist()+"\nSongID"+songInfo.getSongId()+"\nURL:"+songInfo.getSongUrl());
             songInfos.add(songInfo);
         }
-
+        Log.d("SongListAsync", songInfos.toString());
+        songInfos.forEach(song -> Log.d("SongListAsyncSong",song.getSongId()));
         SongListManager.addPlayList(position, songInfos);
+        Log.d("AddSongList",position+"->"+songInfos.toString());
         SongListManager.addDjDetail(dj);
     }
 

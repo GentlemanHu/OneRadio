@@ -13,16 +13,23 @@ import pers.hu.oneradio.utils.ConfigChecker;
 import pers.hu.oneradio.utils.othertest.DjCategory;
 
 // just extends Service to get context
-final public class SmartUrlGetter {
+public class SmartUrlGetter {
 
     private Context context;
     private String site;
 
+    public static class UrlGetterProvider {
+        private static final SmartUrlGetter instance = new SmartUrlGetter(OneRadioApplication.getContext());
 
-    public SmartUrlGetter(Context context) {
+        public static SmartUrlGetter getInstance() {
+            return instance;
+        }
+    }
+
+    private SmartUrlGetter(Context context) {
         this.context = context;
-        this.site = ((OneRadioApplication)context.getApplicationContext()).getConfig();
-        System.out.println("site:--->>"+site);
+        this.site = ((OneRadioApplication) context.getApplicationContext()).getConfig();
+        System.out.println("site:--->>" + site);
     }
 
     public String getSongDetailById(long id) {
@@ -30,7 +37,7 @@ final public class SmartUrlGetter {
     }
 
     public String getSongUrlDataById(long id) {
-        return site + "/music/url?id=" + id;
+        return site + "/song/url?id=" + id;
     }
 
     public String getHotDjRaw() {
@@ -60,7 +67,8 @@ final public class SmartUrlGetter {
     public String getProgramTopList() {
         return site + "/dj/program/toplist";
     }
-    public String getConfig(){
+
+    public String getConfig() {
         return site;
     }
 

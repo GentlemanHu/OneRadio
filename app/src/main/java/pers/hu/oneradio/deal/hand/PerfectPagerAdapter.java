@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +24,8 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import pers.hu.oneradio.activity.home.Home;
+import pers.hu.oneradio.base.TaskExecutor;
 import pers.hu.oneradio.deal.hand.async.GetDjIdTask;
 import pers.hu.oneradio.feel.home.perfectview.CommonFragment;
 import pers.hu.oneradio.deal.hand.async.DjSingleTask;
@@ -32,10 +35,9 @@ import pers.hu.oneradio.net.model.DjDetail;
 public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implements Serializable {
     private Integer[] ids;
     private Context context;
-    private boolean doNotifyDataSetChangedOnce = true;
-    private ArrayList<DjDetail> djs = new ArrayList<>();
+    private int position = -1;
+    private volatile int counter = 0;
     private Handler handler;
-    private int index = 0;
     private List idList;
     private volatile ArrayList<CommonFragment> fragments = new ArrayList<CommonFragment>();
     private Random random = new Random();
@@ -55,6 +57,7 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
                 switch (msg.what) {
                     case 1:
                         notifyDataSetChanged();
+                        ((Home) context).onTaskCompleted(position);
                         break;
                     default:
                         break;
@@ -68,76 +71,74 @@ public class PerfectPagerAdapter extends SmartFragmentStatePagerAdapter implemen
 
     @Override
     public Fragment getItem(int position) {
-        //id过少自动请求添加
-        if (idList.size() - index < 3) {
-            GetDjIdTask task = new GetDjIdTask(context);
-            task.execute(DjBoardEnum.HOT);
-            try {
-                ids = task.get();
-                List list = Arrays.stream(ids).collect(Collectors.toList());
-                synchronized (idList) {
-                    idList.addAll(list);
-                }
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        if (idList.size() != 0) {
-            CommonFragment fragment = fragments.get(position);
-            fragment.setPosition(position);
-            final DjSingleTask task = new DjSingleTask(fragment, handler, context);
-            synchronized (idList) {
-                String id = String.valueOf(idList.get(index));
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                        //TODO:获取电台
-                        task.execute(id, "jjf");
-                    }
-                };
-                handler.postDelayed(r, 100);
-                index++;
-            }
-        }
         return fragments.get(position);
     }
 
     public void addItem() {
         //保证队列里不能过度添加，和后退时不添加
-        if (fragments.size() < idList.size()) {
-            CommonFragment fragment = new CommonFragment();
-            synchronized (fragments) {
-                fragments.add(fragment);
-                notifyDataSetChanged();
-            }
-        }
+//        if (fragments.size() < idList.size()) {
+//            Log.println(Log.ERROR, "AddItem", "添加Item，fragment大小" + fragments.size());
+        add2DjList();
+//        }
     }
 
     private void init() {
-        int index = 0;
-        while (index < 5) {
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    CommonFragment fragment = new CommonFragment();
-                    synchronized (fragments) {
-                        fragments.add(fragment);
-                    }
-                    handler.sendEmptyMessage(1);
-                }
-            };
-            r.run();
+        int i = 0;
+        while (i < 10) {
+            fragments.add(new CommonFragment());
             notifyDataSetChanged();
-            index++;
+            add2DjList();
+            i++;
         }
         notifyDataSetChanged();
     }
 
+
+    private void add2DjList() {
+        Runnable r = () -> {
+            synchronized (idList) {
+                addFragment();
+                CommonFragment fragment = fragments.get(counter);
+                // 设置postion
+                fragment.setPosition(counter);
+                final DjSingleTask task = new DjSingleTask(fragment, handler, context);
+                String id = String.valueOf(idList.get(0));
+                idList.remove(0);
+                counter++;
+                Log.println(Log.ERROR, "IDLIST Size", "歌单ID大小" + idList.size()+"<->>>counter"+counter+"<----fragment position"+fragment.getPosition());
+                refreshIdList();
+                task.execute(id, "useless");
+            }
+        };
+        TaskExecutor.runInBackground(r);
+    }
+
+    private void refreshIdList() {
+        //id过少自动请求添加
+        synchronized (idList) {
+            if (idList.size() < 3) {
+                GetDjIdTask task = new GetDjIdTask(context);
+                task.execute(random.nextInt(100) > 50 ? DjBoardEnum.HOT : DjBoardEnum.RCD);
+                try {
+                    ids = task.get();
+                    List list = Arrays.stream(ids).collect(Collectors.toList());
+                    idList.addAll(list);
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void addFragment() {
+        TaskExecutor.runInMainThread(() -> {
+            fragments.add(new CommonFragment());
+            notifyDataSetChanged();
+        });
+    }
+
     @Override
     public int getCount() {
-        if (doNotifyDataSetChangedOnce) {
-            doNotifyDataSetChangedOnce = false;
-        }
         return fragments.size();
     }
 

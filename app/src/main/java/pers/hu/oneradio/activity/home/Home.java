@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AnimationSet;
@@ -53,6 +54,7 @@ import java.util.Random;
 import jp.wasabeef.blurry.Blurry;
 import pers.hu.oneradio.R;
 import pers.hu.oneradio.activity.PerfectActivity;
+import pers.hu.oneradio.base.TaskExecutor;
 import pers.hu.oneradio.deal.hand.async.WaitSongReadyTask;
 import pers.hu.oneradio.deal.listener.OnDataLoadCompleted;
 import pers.hu.oneradio.deal.listener.OnTaskCompleted;
@@ -72,9 +74,11 @@ import pers.hu.oneradio.net.model.Program;
 import pers.hu.oneradio.net.model.Song;
 import pers.hu.oneradio.utils.Utils;
 
+import static pers.hu.oneradio.utils.AppUtils.*;
+
 public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoadCompleted {
     private ItemIconAnimation animation;
-    private int last_position;
+    private int last_position = 0;
     private OnTaskCompleted dealer = this;
     private RichPathView load;
     private static int position = 0;
@@ -120,7 +124,7 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
         detailHandler = new DetailHandler();
         djIdHandler = new DjIdHandler();
 
-        musicView.setVisibility(View.INVISIBLE);
+        musicView.setVisibility(View.GONE);
 
         StarrySky.Companion.with().addPlayerEventListener(getMusicListener());
         animation.animateCommand();
@@ -134,22 +138,17 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
     //初始化，采用handler异步延迟启动，防止阻塞主线程
     private void init() {
         ids = Arrays.stream(getIntent().getIntArrayExtra("ids")).boxed().toArray(Integer[]::new);
-        adapter = new PerfectPagerAdapter(getSupportFragmentManager(), ids,this);
+        adapter = new PerfectPagerAdapter(getSupportFragmentManager(), ids, this);
         viewPager.setAdapter(adapter);
+        TaskExecutor.runInBackground(() -> {
+            fillViewPager();
+            handler.sendEmptyMessage(1);
+        });
 
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                fillViewPager();
-                handler.sendEmptyMessage(1);
-            }
-        };
-        thread.start();
     }
 
     private void fillViewPager() {
-        load.setVisibility(View.INVISIBLE);
+        load.setVisibility(View.GONE);
 
         adapter.notifyDataSetChanged();
         viewPager.setOffscreenPageLimit(7);
@@ -164,30 +163,20 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
             public void onPageSelected(int position) {
                 Home.position = position;
                 load.setVisibility(View.VISIBLE);
-                //稍微延迟请求，防止阻塞，减少卡顿感
-                if (last_position < position) {
-                    Runnable add = new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.addItem();
-                        }
-                    };
-                    handler.postDelayed(add, 100);
-                }
+                Log.println(Log.ERROR, "OnPageSelected", "当前position->" + position + "  当前size->" + SongListManager.getDjDetails().size());
+
                 //加入判断，防止每次触发异步任务
                 if (SongListManager.getDjDetails().size() - 2 >= position) {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            blurImage(position);
-                            getSongs(position);
-                        }
-                    }.start();
+                    Log.println(Log.ERROR, "OnPageSelected", "已存在-》" + position);
+                    TaskExecutor.runInBackground(() -> {
+                        blurImage(position);
+                        getSongs(position);
+                    });
                 } else {
-                    new WaitSongReadyTask(dealer, position).execute();
-                    Toast toast = Toast.makeText(Home.this, "请等待电台信息加载完毕~~", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP, 0, 0);
-                    toast.show();
+                    if (last_position < position) {
+                        Log.println(Log.ERROR, "OnPageSelected", "新添加=>" + position);
+                        adapter.addItem();
+                    }
                 }
 
                 last_position = position;
@@ -202,62 +191,54 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
     private void getSongs(int position) {
         dj = SongListManager.getDjDetails().get(position);
 
-        djName.startAnimation(Transition.textSlide(this));
-        if (dj.getRcmdtext() == null)
-            djName.setText("同一个世界 同一个电台\n  --OneRadio");
-        else if (dj.getRcmdtext() != null)
-            djName.setText(dj.getRcmdtext());
-        songInfos = SongListManager.getSongPlaylist(position);
+        TaskExecutor.runInMainThread(() -> {
+            djName.startAnimation(Transition.textSlide(this));
+            if (dj.getRcmdtext() == null)
+                djName.setText("同一个世界 同一个电台\n  --OneRadio");
+            else if (dj.getRcmdtext() != null)
+                djName.setText(dj.getRcmdtext());
+        });
 
         try {
-            StarrySky.Companion.with().addPlayList(songInfos);
+            songInfos = SongListManager.getSongPlaylist(position);
+//            StarrySky.Companion.with().addPlayList(songInfos);
+            Log.d("SongInfos",songInfos.toString());
             StarrySky.Companion.with().playMusic(songInfos, 0);
-            System.out.println(songInfos.get(0).getSongName() + ">>>>>>>>>>>>>电台");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(Home.this, "欢迎收听<" + dj.getName() + ">" + "电台~", Toast.LENGTH_SHORT).show();
-                }
-            });
+//            System.out.println(songInfos.get(0).getSongName() + ">>>>>>>>>>>>>电台");
+//            runOnUiThread(() -> Toast.makeText(Home.this, "欢迎收听<" + dj.getName() + ">" + "电台~", Toast.LENGTH_SHORT).show());
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e.getMessage() + "错误信息！！！");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(Home.this, "发生未知错误，请重试或切换其他电台~~", Toast.LENGTH_SHORT).show();
-                }
-            });
+            runOnUiThread(() -> Toast.makeText(Home.this, "发生未知错误，请重试或切换其他电台~~", Toast.LENGTH_SHORT).show());
         }
 
     }
 
     private void blurImage(int position) {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Drawable d = adapter.getFragments().get(position).getImageView().getDrawable();
-                    if (d != null) {
-                        load.setVisibility(View.INVISIBLE);
-                        Bitmap bitmap = Utils.drawableToBitmap(d);
+        Runnable r = () -> {
+            try {
+                Drawable d = adapter.getFragments().get(position).getImageView().getDrawable();
+                if (d != null) {
+                    load.setVisibility(View.GONE);
+                    Bitmap bitmap = Utils.drawableToBitmap(d);
 
-                        homelayout.setBackground(d);
-                        homebg.startAnimation(Transition.textSlide(Home.this));
-                        homebg.setImageBitmap(bitmap);
-                        Blurry.with(Home.this).animate(21000).sampling(2).from(bitmap).into(homebg);
+                    homelayout.setBackground(d);
+                    homebg.startAnimation(Transition.textSlide(Home.this));
+                    homebg.setImageBitmap(bitmap);
+                    Blurry.with(Home.this).animate(22000).sampling(2).from(bitmap).into(homebg);
 
-                        int color = Utils.getDominantColor(bitmap);
+                    int color = Utils.getDominantColor(bitmap);
 
-                        musicView.setAnimation(Transition.textSlide(Home.this));
-                        musicView.setColor(color/3);
-                        System.out.println(Utils.getDominantColor(bitmap) + "get main color");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    musicView.setAnimation(Transition.textSlide(Home.this));
+                    musicView.setColor(color / 3);
+                    System.out.println(Utils.getDominantColor(bitmap) + "get main color");
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
-        handler.postDelayed(r, 150);
+        TaskExecutor.runInMainThread(r);
+//        handler.postDelayed(r, 150);
     }
 
     @Override
@@ -281,8 +262,8 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
                     .normalImageRes(R.drawable.command));
         }
 
-        boom.setHideDuration(300);
-        boom.setShowDuration(700);
+        boom.setHideDuration(200);
+        boom.setShowDuration(300);
         boom.setOnClickListener((v) -> {
             System.out.println("clicked!!!");
         });
@@ -290,15 +271,18 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
 
     @Override
     public void onTaskCompleted(int position) {
-        blurImage(position);
-        getSongs(position);
+        if (position == getCurrentPosition()) {
+            TaskExecutor.runInBackground(() -> {
+                blurImage(position);
+                getSongs(position);
+            });
+        }
     }
 
     @Override
     public int getCurrentPosition() {
         return position;
     }
-
 
 
     private OnPlayerEventListener getMusicListener() {
@@ -315,12 +299,12 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
 
             @Override
             public void onPlayerPause() {
-                musicView.setVisibility(View.INVISIBLE);
+                musicView.setVisibility(View.GONE);
             }
 
             @Override
             public void onPlayerStop() {
-                musicView.setVisibility(View.INVISIBLE);
+                musicView.setVisibility(View.GONE);
             }
 
             @Override
@@ -340,6 +324,7 @@ public class Home extends PerfectActivity implements OnTaskCompleted, OnDataLoad
         };
         return listener;
     }
+
     @Deprecated
     @Override
     //在Async中处理

@@ -28,7 +28,7 @@ public class SingleSongParser {
     public SingleSongParser(Context context){
         this.context = context;
         downloader = new SingleDetailDownloader(context);
-        urlGetter=new SmartUrlGetter(context);
+        urlGetter=SmartUrlGetter.UrlGetterProvider.getInstance();
         System.out.println(urlGetter.getConfig()+"<-----from SingleSongParser");
     }
     public List<Song> toSongData(String programStr) {

@@ -1,18 +1,11 @@
 package pers.hu.oneradio.net.model;
 
+import java.util.Arrays;
+
 public class DjDetail {
     private Integer id;
     private String rcmdtext;
     private String category;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     private String name;
     private String picUrl;
     private Program[] programs;
@@ -25,6 +18,13 @@ public class DjDetail {
         this.programs = programs;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     public Integer getId() {
         return id;
     }
@@ -57,4 +57,15 @@ public class DjDetail {
         this.picUrl = picUrl;
     }
 
+    @Override
+    public String toString() {
+        return "DjDetail{" +
+                "id=" + id +
+                ", rcmdtext='" + rcmdtext + '\'' +
+                ", category='" + category + '\'' +
+                ", name='" + name + '\'' +
+                ", picUrl='" + picUrl + '\'' +
+                ", programs=" + Arrays.toString(programs) +
+                '}';
+    }
 }

@@ -1,6 +1,7 @@
 package pers.hu.oneradio;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
@@ -25,18 +26,22 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class OneRadioApplication extends Application {
     private String config;
+    private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
         initPlayer();
         initImageLoader();
+        CrashReport.initCrashReport(getApplicationContext(), "48832351bc", false);
+        OneRadioApplication.context = getApplicationContext();
     }
 
     public String getConfig() {
@@ -50,6 +55,7 @@ public class OneRadioApplication extends Application {
     private void initPlayer() {
         NotificationConfig notificationConfig = new NotificationConfig();
         notificationConfig.setTargetClass("pers.hu.oneradio.activity.home.Home");
+        notificationConfig.setSmallIconRes(R.mipmap.appicon);
 
         StarrySkyConfig config = new StarrySkyConfig().newBuilder()
                 .isOpenNotification(true)
@@ -94,4 +100,7 @@ public class OneRadioApplication extends Application {
         return options;
     }
 
+    public static Context getContext() {
+        return OneRadioApplication.context;
+    }
 }

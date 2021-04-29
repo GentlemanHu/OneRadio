@@ -16,10 +16,11 @@ public class WaitSongReadyTask extends AsyncTask<Void, Boolean, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-        while (true) {
-            if (SongListManager.getDjDetails().size() - 1 > position)
-                return null;
+        for (; ; ) {
+            if (SongListManager.getDjDetails().size() - 1 >= position)
+                break;
         }
+        return null;
     }
 
     @Override
@@ -30,8 +31,6 @@ public class WaitSongReadyTask extends AsyncTask<Void, Boolean, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (dealer.getCurrentPosition() == position) {
-            dealer.onTaskCompleted(position);
-        }
+        dealer.onTaskCompleted(position);
     }
 }
