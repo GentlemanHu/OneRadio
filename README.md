@@ -1,6 +1,12 @@
+<div align="center">
+    <img src="https://img.shields.io/github/license/GentlemanHu/OneRadio">
+    <img src="https://img.shields.io/github/stars/GentlemanHu/OneRadio">
+    <img src="https://img.shields.io/github/forks/GentlemanHu/OneRadio">
+</div>
+
 
 ## OneRadio 电台
-> 简单地一个电台，为记录自己编程、认知水平，供以后回首。
+> 简单的一个电台，为记录自己编程、认知水平，供以后回首。
 ---
 #### 整体结构
 
